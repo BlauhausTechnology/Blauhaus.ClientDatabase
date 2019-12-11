@@ -17,9 +17,9 @@ jobs:
      - name: Build NuGet Package
        run: |
         dotnet build ./src/Blauhaus.ClientDatabase.sln --configuration Release
-        dotnet pack ./src/Blauhaus.ClientDatabase.Abstraction/Blauhaus.ClientDatabase.Abstraction.csproj -p:PackageVersion=${VERSION_NAME} --no-build --output ./ --configuration Release 
+        dotnet pack ./src/Blauhaus.ClientDatabase.Abstractions/Blauhaus.ClientDatabase.Abstractions.csproj -p:PackageVersion=${VERSION_NAME} --no-build --output ./ --configuration Release 
         dotnet pack ./src/Blauhaus.ClientDatabase.LiteDb/Blauhaus.ClientDatabase.LiteDb.csproj -p:PackageVersion=${VERSION_NAME} --no-build --output ./ --configuration Release 
      - name: Deploy NuGet Package
        run:  |
-        dotnet nuget push /home/runner/work/Blauhaus.ClientDatabase/Blauhaus.ClientDatabase/Blauhaus.ClientDatabase.Abstraction.${VERSION_NAME}.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
-        dotnet nuget push /home/runner/work/Blauhaus.ClientDatabase/Blauhaus.ClientDatabase/Blauhaus.LiteDb.${VERSION_NAME}.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+        dotnet nuget push /home/runner/work/Blauhaus.ClientDatabase/Blauhaus.ClientDatabase/Blauhaus.ClientDatabase.Abstractions.${VERSION_NAME}.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+        dotnet nuget push /home/runner/work/Blauhaus.ClientDatabase/Blauhaus.ClientDatabase/Blauhaus.ClientDatabase.LiteDb.${VERSION_NAME}.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
