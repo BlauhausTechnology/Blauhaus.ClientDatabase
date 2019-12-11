@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>8</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blauhaus.Common.Domain" Version="0.7.3" />
+    <PackageReference Include="Blauhaus.Ioc.Abstractions" Version="0.6.3" />
+  </ItemGroup>
+
+</Project>
