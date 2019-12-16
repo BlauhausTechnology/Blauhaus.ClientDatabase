@@ -9,19 +9,24 @@ namespace Blauhaus.ClientDatabase.LiteDb.Service
 {
     public class LiteDbDatabaseService : BaseLiteDbDatabaseService
     {
-        private readonly string _path;
+        private readonly ConnectionString _connectionString;
 
         public LiteDbDatabaseService(
             ILiteDbConfig config,
             IDeviceInfoService deviceInfoService) : base(config)
         {
-            _path = Path.Combine(deviceInfoService.AppDataFolder, config.DatabaseName) + ".db";
+            var path = Path.Combine(deviceInfoService.AppDataFolder, config.DatabaseName) + ".db";
+            _connectionString = new ConnectionString
+            {
+                UtcDate = true,
+                Filename = path,
+            };
         }
 
 
         public override LiteDatabase GetDatabase()
         {
-            return new LiteDatabase(_path);
+            return new LiteDatabase(_connectionString);
         }
 
       
