@@ -1,6 +1,5 @@
 ﻿using Blauhaus.ClientDatabase.LiteDb.Config;
 using Blauhaus.ClientDatabase.LiteDb.Service;
-using Blauhaus.ClientDatabase.LiteDb.Service.Base;
 using Blauhaus.Ioc.Abstractions;
 
 namespace Blauhaus.ClientDatabase.LiteDb._Ioc

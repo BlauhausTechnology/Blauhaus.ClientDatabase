@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using LiteDB;
 
-namespace Blauhaus.ClientDatabase.LiteDb.Service.Base
+namespace Blauhaus.ClientDatabase.LiteDb.Service
 {
     public interface ILiteDbDatabaseService
     {
         LiteDatabase GetDatabase();
+        LiteRepository GetRepository();
+
         void EnsureIndex<T, TProperty>(BsonExpression expression);
 
         void Insert<T>(IEnumerable<T> entities);
