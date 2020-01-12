@@ -6,6 +6,6 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
     public interface ISqliteDatabaseService
     {
         ValueTask<SQLiteAsyncConnection> GetDatabaseConnectionAsync();
-        void WipeAll();
+        Task DropTablesAsync();
     }
 }
