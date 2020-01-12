@@ -41,12 +41,12 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
 
         }
 
-        public async Task WipeAllAsync()
+        public void WipeAll()
         {
-            var db = await GetDatabaseConnectionAsync();
+            var db = new SQLiteConnection(_connectionString, _flags);
             foreach (var dbTableMapping in db.TableMappings)
             {
-                await db.DropTableAsync(dbTableMapping);
+                db.DropTable(dbTableMapping);
             }
         }
 
