@@ -18,7 +18,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
         private readonly SQLiteOpenFlags _flags;
 
 
-        protected SqliteDatabaseService(
+        public SqliteDatabaseService(
             ISqliteConfig config,
             IDeviceInfoService deviceInfoService)
         {
@@ -41,6 +41,14 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
 
         }
 
+        public async Task WipeAllAsync()
+        {
+            var db = await GetDatabaseConnectionAsync();
+            foreach (var dbTableMapping in db.TableMappings)
+            {
+                await db.DropTableAsync(dbTableMapping);
+            }
+        }
 
 
         private Task<T> AttemptAndRetry<T>(Func<Task<T>> action, int numRetries = 3)
