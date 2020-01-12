@@ -48,6 +48,9 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
             {
                 await connection.DropTableAsync(dbTableMapping);
             }
+
+            await _connection.CloseAsync();
+            _connection = null;
         }
 
 
