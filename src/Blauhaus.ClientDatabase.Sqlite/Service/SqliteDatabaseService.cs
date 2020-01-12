@@ -22,7 +22,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
             ISqliteConfig config,
             IDeviceInfoService deviceInfoService)
         {
-            _connectionString = Path.Combine(deviceInfoService.AppDataFolder, config.DatabaseName);
+            _connectionString = Path.Combine(deviceInfoService.AppDataFolder, config.DatabaseName + ".db");
             _tableTypes = config.TableTypes;
             _flags = SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache;
         }
