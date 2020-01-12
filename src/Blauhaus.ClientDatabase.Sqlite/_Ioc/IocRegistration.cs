@@ -1,6 +1,5 @@
 ﻿using Blauhaus.ClientDatabase.Sqlite.Config;
 using Blauhaus.ClientDatabase.Sqlite.Service;
-using Blauhaus.ClientDatabase.Sqlite.Service._Base;
 using Blauhaus.Ioc.Abstractions;
 
 namespace Blauhaus.ClientDatabase.Sqlite._Ioc
