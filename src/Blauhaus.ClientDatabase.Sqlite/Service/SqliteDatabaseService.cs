@@ -8,7 +8,7 @@ using Blauhaus.DeviceServices.Abstractions.DeviceInfo;
 using Polly;
 using SQLite;
 
-namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
+namespace Blauhaus.ClientDatabase.Sqlite.Service
 {
     public class SqliteDatabaseService : ISqliteDatabaseService
     {
