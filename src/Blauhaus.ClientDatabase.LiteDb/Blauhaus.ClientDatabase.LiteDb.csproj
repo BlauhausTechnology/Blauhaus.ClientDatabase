@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Blauhaus.DeviceServices.Abstractions" Version="0.1.8" />
     <PackageReference Include="Blauhaus.Ioc.Abstractions" Version="0.6.3" />
-    <PackageReference Include="LiteDB" Version="5.0.3" />
+    <PackageReference Include="LiteDB" Version="5.0.0-alpha2" />
   </ItemGroup>
 
   <ItemGroup>

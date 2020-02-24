@@ -19,7 +19,7 @@ namespace Blauhaus.ClientDatabase.LiteDb.Service
             var path = Path.Combine(deviceInfoService.AppDataFolder, config.DatabaseName) + ".db";
             _connectionString = new ConnectionString
             {
-                // does not work anymore UtcDate = true,
+                UtcDate = true,
                 Filename = path,
             };
         }
