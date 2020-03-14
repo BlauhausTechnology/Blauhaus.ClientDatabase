@@ -4,7 +4,7 @@ using Blauhaus.Ioc.Abstractions;
 
 namespace Blauhaus.ClientDatabase.LiteDb._Ioc
 {
-    public static class IocRegistration
+    public static class IocServiceExtensions
     {
         public static IIocService RegisterLiteDb<TConfig>(this IIocService iocService) where TConfig : class, ILiteDbConfig
         {
