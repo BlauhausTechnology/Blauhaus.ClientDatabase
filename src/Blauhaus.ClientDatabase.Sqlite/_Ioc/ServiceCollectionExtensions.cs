@@ -6,7 +6,7 @@ namespace Blauhaus.ClientDatabase.Sqlite._Ioc
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection RegisterLiteDb<TConfig>(this IServiceCollection services) where TConfig : class, ISqliteConfig
+        public static IServiceCollection RegisterSqlite<TConfig>(this IServiceCollection services) where TConfig : class, ISqliteConfig
         {
             services.AddScoped<ISqliteConfig, TConfig>();
             return Register(services);
