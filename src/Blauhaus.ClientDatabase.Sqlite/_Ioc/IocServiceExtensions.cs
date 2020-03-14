@@ -6,7 +6,7 @@ namespace Blauhaus.ClientDatabase.Sqlite._Ioc
 {
     public static class IocRegistration
     {
-        public static IIocService RegisterLiteDb<TConfig>(this IIocService iocService) where TConfig : class, ISqliteConfig
+        public static IIocService RegisterSqlite<TConfig>(this IIocService iocService) where TConfig : class, ISqliteConfig
         {
             iocService.RegisterImplementation<ISqliteConfig, TConfig>();
             return Register(iocService);
