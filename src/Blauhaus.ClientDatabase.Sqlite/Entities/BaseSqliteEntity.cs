@@ -1,5 +1,5 @@
 ﻿using System;
-using Blauhaus.Common.Domain.Entities;
+using Blauhaus.Domain.Common.Entities;
 using SQLite;
 
 namespace Blauhaus.ClientDatabase.Sqlite.Entities
