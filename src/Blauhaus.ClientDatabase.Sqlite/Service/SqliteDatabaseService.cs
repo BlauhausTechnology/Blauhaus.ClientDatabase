@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blauhaus.ClientDatabase.Sqlite.Config;
 using Blauhaus.DeviceServices.Abstractions.DeviceInfo;
-using Polly;
 using SQLite;
 
 namespace Blauhaus.ClientDatabase.Sqlite.Service
@@ -54,14 +53,14 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
         }
 
 
-        private Task<T> AttemptAndRetry<T>(Func<Task<T>> action, int numRetries = 3)
-        {
-            return Policy.Handle<SQLiteException>()
-                .WaitAndRetryAsync(numRetries, PollyRetryAttempt)
-                .ExecuteAsync(action);
+        //private Task<T> AttemptAndRetry<T>(Func<Task<T>> action, int numRetries = 3)
+        //{
+        //    return Policy.Handle<SQLiteException>()
+        //        .WaitAndRetryAsync(numRetries, PollyRetryAttempt)
+        //        .ExecuteAsync(action);
 
-            static TimeSpan PollyRetryAttempt(int attemptNumber) => TimeSpan.FromSeconds(Math.Pow(2, attemptNumber));
-        }
+        //    static TimeSpan PollyRetryAttempt(int attemptNumber) => TimeSpan.FromSeconds(Math.Pow(2, attemptNumber));
+        //}
 
     }
 }
