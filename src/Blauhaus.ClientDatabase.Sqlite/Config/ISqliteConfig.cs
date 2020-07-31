@@ -7,6 +7,5 @@ namespace Blauhaus.ClientDatabase.Sqlite.Config
     public interface ISqliteConfig : IClientDatabaseConfig
     {
         IList<Type> TableTypes { get; }
-        string DatabasePath { get; }
     }
 }

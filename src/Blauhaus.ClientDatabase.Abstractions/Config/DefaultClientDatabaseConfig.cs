@@ -4,9 +4,11 @@
     {
         public DefaultClientDatabaseConfig()
         {
-            DatabaseName = "LiteDbDatabase";
+            DatabaseName = "sqliteDb";
+            DatabasePath = string.Empty;
         }
 
         public string DatabaseName { get; protected set; }
+        public string DatabasePath { get; }
     }
 }
