@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blauhaus.ClientDatabase.Sqlite.Config;
@@ -9,15 +10,16 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 {
     public abstract class BaseSqliteDatabaseService : ISqliteDatabaseService
     {
-        private readonly string _connectionString;
+        protected string ConnectionString;
         private readonly IList<Type> _tableTypes;
         private SQLiteAsyncConnection? _connection;
         private readonly SQLiteOpenFlags _flags;
 
 
-        protected BaseSqliteDatabaseService(ISqliteConfig config, string connectionString)
+        protected BaseSqliteDatabaseService(ISqliteConfig config)
         {
-            _connectionString = connectionString;
+            ConnectionString = Path.Combine(config.DatabasePath, config.DatabaseName, ".sqlite");
+
             _tableTypes = config.TableTypes;
             _flags = SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache;
         }
@@ -27,7 +29,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
         {
             if (_connection == null)
             {
-                _connection = new SQLiteAsyncConnection(_connectionString, _flags);
+                _connection = new SQLiteAsyncConnection(ConnectionString, _flags);
                 await _connection.EnableWriteAheadLoggingAsync().ConfigureAwait(false);
                 await _connection.CreateTablesAsync(CreateFlags.None, _tableTypes.ToArray());
             }
