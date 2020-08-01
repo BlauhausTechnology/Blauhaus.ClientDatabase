@@ -18,8 +18,8 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 
         protected BaseSqliteDatabaseService(ISqliteConfig config)
         {
-            
-            ConnectionString = Path.Combine(config.DatabasePath, config.DatabaseName);
+
+            ConnectionString = config.DatabasePath;
 
             _tableTypes = config.TableTypes;
             _flags = SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache;
