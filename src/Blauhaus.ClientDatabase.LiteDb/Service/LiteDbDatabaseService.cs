@@ -13,10 +13,9 @@ namespace Blauhaus.ClientDatabase.LiteDb.Service
         private readonly ConnectionString _connectionString;
 
         public LiteDbDatabaseService(
-            ILiteDbConfig config,
-            IDeviceInfoService deviceInfoService) 
+            ILiteDbConfig config)
         {
-            var path = Path.Combine(deviceInfoService.AppDataFolder, config.DatabaseName) + ".db";
+            var path = config.DatabasePath;
             _connectionString = new ConnectionString
             {
                 UtcDate = true,
