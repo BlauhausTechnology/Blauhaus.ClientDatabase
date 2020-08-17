@@ -39,7 +39,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 
         }
 
-        public async Task DropTablesAsync()
+        public async Task DeleteDataAsync()
         {
             var connection = await GetDatabaseConnectionAsync();
             foreach (var dbTableMapping in connection.TableMappings)
