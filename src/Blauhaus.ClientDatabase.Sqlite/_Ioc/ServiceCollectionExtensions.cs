@@ -1,6 +1,8 @@
-﻿using Blauhaus.ClientDatabase.Sqlite.Config;
+﻿using Blauhaus.ClientDatabase.Abstractions;
+using Blauhaus.ClientDatabase.Sqlite.Config;
 using Blauhaus.ClientDatabase.Sqlite.Service;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Blauhaus.ClientDatabase.Sqlite._Ioc
 {
@@ -14,7 +16,8 @@ namespace Blauhaus.ClientDatabase.Sqlite._Ioc
 
         private static IServiceCollection Register(IServiceCollection services)
         {
-            services.AddScoped<ISqliteDatabaseService, SqliteDatabaseService>();
+            services.TryAddScoped<ISqliteDatabaseService, SqliteDatabaseService>();
+            services.TryAddScoped<IClientDatabaseService>(x => x.GetService<ISqliteDatabaseService>());
             return services;
         }
     }
