@@ -13,7 +13,5 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
         Task ExecuteInTransactionAsync(Action<SQLiteConnection> databaseActions);
         Task<T?> ExecuteInTransactionAsync<T>(Func<SQLiteConnection, T> databaseActions) where T : class;
         Task<Response<T>> ExecuteInTransactionAsync<T>(Func<SQLiteConnection, Response<T>> databaseActions) where T : class;
-
-        Task CloseConnectionAsync();
     }
 }

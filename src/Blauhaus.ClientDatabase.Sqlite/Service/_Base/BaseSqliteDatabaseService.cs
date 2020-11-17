@@ -67,28 +67,8 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
             });
             return result;
         }
-
-        public async Task CloseConnectionAsync()
-        {
-            if (_connection != null)
-            {
-                await _connection.CloseAsync();
-                _connection = null;
-            }
-        }
-
-        //public async Task DeleteDataAsync()
-        //{
-        //    var connection = await GetDatabaseConnectionAsync();
-        //    var tasks = new List<Task>();
-        //    foreach (var dbTableMapping in connection.TableMappings)
-        //    {
-        //        tasks.Add(connection.ExecuteAsync("DELETE FROM " + dbTableMapping.TableName));
-        //    }
-
-        //    await Task.WhenAll(tasks);
-        //}
-
+         
+        
         public async Task DeleteDataAsync()
         {
             var connection = await GetDatabaseConnectionAsync();
@@ -98,20 +78,10 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
                 var tableMap = connection.TableMappings.FirstOrDefault(x => x.TableName == tableType.Name);
                 if (tableMap != null)
                 {
-                    await connection.DropTableAsync(tableMap);
+                    await connection.DropTableAsync(tableMap); 
                 }
             }
-        }
-
-        //public async Task DeleteDataAsync()
-        //{
-        //    var connection = await GetDatabaseConnectionAsync();
-
-        //    foreach (var dbTableMapping in connection.TableMappings)
-        //    {
-        //        await connection.DropTableAsync(dbTableMapping);
-        //    }
-        //}
-
+            await connection.CreateTablesAsync(CreateFlags.None, _tableTypes.ToArray());
+        } 
     }
 }
