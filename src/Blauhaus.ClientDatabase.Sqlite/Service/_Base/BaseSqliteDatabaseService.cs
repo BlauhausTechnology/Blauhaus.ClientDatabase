@@ -93,11 +93,25 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
         {
             var connection = await GetDatabaseConnectionAsync();
 
-            foreach (var dbTableMapping in connection.TableMappings)
+            foreach (var tableType in _tableTypes)
             {
-                await connection.DropTableAsync(dbTableMapping);
+                var tableMap = connection.TableMappings.FirstOrDefault(x => x.TableName == tableType.Name);
+                if (tableMap != null)
+                {
+                    await connection.DropTableAsync(tableMap);
+                }
             }
         }
+
+        //public async Task DeleteDataAsync()
+        //{
+        //    var connection = await GetDatabaseConnectionAsync();
+
+        //    foreach (var dbTableMapping in connection.TableMappings)
+        //    {
+        //        await connection.DropTableAsync(dbTableMapping);
+        //    }
+        //}
 
     }
 }
