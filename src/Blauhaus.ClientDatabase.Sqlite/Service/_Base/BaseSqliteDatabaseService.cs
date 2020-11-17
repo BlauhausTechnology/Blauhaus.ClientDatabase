@@ -68,6 +68,15 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
             return result;
         }
 
+        public async Task CloseConnectionAsync()
+        {
+            if (_connection != null)
+            {
+                await _connection.CloseAsync();
+                _connection = null;
+            }
+        }
+
         public async Task DeleteDataAsync()
         {
             var connection = await GetDatabaseConnectionAsync();
@@ -77,8 +86,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
                 await connection.DropTableAsync(dbTableMapping);
             }
 
-            //await _connection.CloseAsync();
-            //_connection = null;
+
         }
 
     }
