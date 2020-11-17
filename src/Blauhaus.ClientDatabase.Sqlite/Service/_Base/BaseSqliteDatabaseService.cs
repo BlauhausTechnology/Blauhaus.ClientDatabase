@@ -77,27 +77,27 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
             }
         }
 
-        public async Task DeleteDataAsync()
-        {
-            var connection = await GetDatabaseConnectionAsync();
-            var tasks = new List<Task>();
-            foreach (var dbTableMapping in connection.TableMappings)
-            {
-                tasks.Add(connection.ExecuteAsync("DELETE FROM " + dbTableMapping.TableName));
-            }
-
-            await Task.WhenAll(tasks);
-        }
-
         //public async Task DeleteDataAsync()
         //{
         //    var connection = await GetDatabaseConnectionAsync();
-
+        //    var tasks = new List<Task>();
         //    foreach (var dbTableMapping in connection.TableMappings)
         //    {
-        //        await connection.DropTableAsync(dbTableMapping);
+        //        tasks.Add(connection.ExecuteAsync("DELETE FROM " + dbTableMapping.TableName));
         //    }
+
+        //    await Task.WhenAll(tasks);
         //}
+
+        public async Task DeleteDataAsync()
+        {
+            var connection = await GetDatabaseConnectionAsync();
+
+            foreach (var dbTableMapping in connection.TableMappings)
+            {
+                await connection.DropTableAsync(dbTableMapping);
+            }
+        }
 
     }
 }
