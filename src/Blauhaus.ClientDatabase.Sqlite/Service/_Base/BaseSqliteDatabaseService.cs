@@ -71,13 +71,14 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
         public async Task DeleteDataAsync()
         {
             var connection = await GetDatabaseConnectionAsync();
+
             foreach (var dbTableMapping in connection.TableMappings)
             {
                 await connection.DropTableAsync(dbTableMapping);
             }
 
-            await _connection.CloseAsync();
-            _connection = null;
+            //await _connection.CloseAsync();
+            //_connection = null;
         }
 
     }

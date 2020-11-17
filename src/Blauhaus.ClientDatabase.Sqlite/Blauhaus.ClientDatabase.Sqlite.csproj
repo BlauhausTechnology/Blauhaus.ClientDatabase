@@ -10,8 +10,8 @@
   <!--https://github.com/praeclarum/sqlite-net/issues/920-->
   
   <ItemGroup>
-    <PackageReference Include="Blauhaus.Ioc.Abstractions" Version="1.2.2" />
-    <PackageReference Include="Blauhaus.Responses" Version="0.2.4" />
+    <PackageReference Include="Blauhaus.Ioc.Abstractions" Version="1.2.4" />
+    <PackageReference Include="Blauhaus.Responses" Version="0.3.2" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
   </ItemGroup>
