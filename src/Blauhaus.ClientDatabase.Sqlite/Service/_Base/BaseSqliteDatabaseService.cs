@@ -27,6 +27,17 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
         }
 
         
+        public SQLiteConnectionWithLock GetDatabaseConnection()
+        {
+            if (_connection == null)
+            {
+                while (!GetDatabaseConnectionAsync().GetAwaiter().IsCompleted)
+                { }
+            }
+
+            return _connection!.GetConnection();
+        }
+
         public async ValueTask<SQLiteAsyncConnection> GetDatabaseConnectionAsync()
         {
             if (_connection == null)
@@ -39,6 +50,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
             return _connection;
 
         }
+
 
         public async Task ExecuteInTransactionAsync(Action<SQLiteConnection> databaseActions)
         {
