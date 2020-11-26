@@ -6,9 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   
-  <!-- the reason we use the beta sqlite-net package is because of this: -->
-  <!--https://github.com/praeclarum/sqlite-net/issues/920-->
-  
   <ItemGroup>
     <PackageReference Include="Blauhaus.Ioc.Abstractions" Version="1.2.4" />
     <PackageReference Include="Blauhaus.Responses" Version="0.3.2" />
