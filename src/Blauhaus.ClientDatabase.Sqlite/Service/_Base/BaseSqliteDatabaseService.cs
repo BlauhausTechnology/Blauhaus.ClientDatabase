@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blauhaus.ClientDatabase.Sqlite.Config;
@@ -11,69 +9,53 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 {
     public abstract class BaseSqliteDatabaseService : ISqliteDatabaseService
     {
-        protected string ConnectionString;
-        private readonly IList<Type> _tableTypes;
-        private SQLiteAsyncConnection? _connection;
-        private readonly SQLiteOpenFlags _flags;
+        private static readonly object Locker = new object();
+        private readonly Type[] _tableTypes;
 
-
-        protected BaseSqliteDatabaseService(ISqliteConfig config)
+        protected BaseSqliteDatabaseService(ISqliteConfig config, string connectionString)
         {
+            _tableTypes = config.TableTypes.ToArray();
 
-            ConnectionString = config.DatabasePath;
+             var connection = new SQLiteAsyncConnection(config.DatabasePath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
 
-            _tableTypes = config.TableTypes;
-            _flags = SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache;
+            connection.EnableWriteAheadLoggingAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            connection.CreateTablesAsync(CreateFlags.None, _tableTypes).GetAwaiter().GetResult();
+
+            AsyncConnection = connection;
         }
 
-        
-        public SQLiteConnectionWithLock GetDatabaseConnection()
+
+        public SQLiteAsyncConnection AsyncConnection { get; }
+
+        public SQLiteConnectionWithLock GetConnection()
         {
-            if (_connection == null)
+            lock (Locker)
             {
-                while (!GetDatabaseConnectionAsync().GetAwaiter().IsCompleted)
-                { }
+                return AsyncConnection.GetConnection();
             }
-
-            return _connection!.GetConnection();
         }
+         
 
-        public async ValueTask<SQLiteAsyncConnection> GetDatabaseConnectionAsync()
+        public Task ExecuteInTransactionAsync(Action<SQLiteConnection> databaseActions)
         {
-            if (_connection == null)
-            {
-                _connection = new SQLiteAsyncConnection(ConnectionString, _flags);
-                await _connection.EnableWriteAheadLoggingAsync().ConfigureAwait(false);
-                await _connection.CreateTablesAsync(CreateFlags.None, _tableTypes.ToArray());
-            }
-
-            return _connection;
-
-        }
-
-
-        public async Task ExecuteInTransactionAsync(Action<SQLiteConnection> databaseActions)
-        {
-            var connection = await GetDatabaseConnectionAsync();
-            await connection.RunInTransactionAsync(databaseActions);
+            return AsyncConnection.RunInTransactionAsync(databaseActions);
         }
 
         public async Task<T?> ExecuteInTransactionAsync<T>(Func<SQLiteConnection, T> databaseActions) where T : class
         {
-            var connection = await GetDatabaseConnectionAsync();
             T? value = default;
-            await connection.RunInTransactionAsync(conn =>
+            await AsyncConnection.RunInTransactionAsync(conn =>
             {
                 value = databaseActions.Invoke(conn);
             });
             return value;
         }
+         
 
         public async Task<Response<T>> ExecuteInTransactionAsync<T>(Func<SQLiteConnection, Response<T>> databaseActions) where T : class
         {
-            var connection = await GetDatabaseConnectionAsync();
             var result = Response.Failure<T>(Errors.Errors.Undefined);
-            await connection.RunInTransactionAsync(conn =>
+            await AsyncConnection.RunInTransactionAsync(conn =>
             {
                 result = databaseActions.Invoke(conn);
             });
@@ -83,17 +65,15 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
         
         public async Task DeleteDataAsync()
         {
-            var connection = await GetDatabaseConnectionAsync();
-
             foreach (var tableType in _tableTypes)
             {
-                var tableMap = connection.TableMappings.FirstOrDefault(x => x.TableName == tableType.Name);
+                var tableMap = AsyncConnection.TableMappings.FirstOrDefault(x => x.TableName == tableType.Name);
                 if (tableMap != null)
                 {
-                    await connection.DropTableAsync(tableMap); 
+                    await AsyncConnection.DropTableAsync(tableMap); 
                 }
             }
-            await connection.CreateTablesAsync(CreateFlags.None, _tableTypes.ToArray());
+            await AsyncConnection.CreateTablesAsync(CreateFlags.None, _tableTypes.ToArray());
         } 
     }
 }

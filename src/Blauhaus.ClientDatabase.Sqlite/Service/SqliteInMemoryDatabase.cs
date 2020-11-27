@@ -5,9 +5,8 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
 {
     public class SqliteInMemoryDatabase : BaseSqliteDatabaseService
     {
-        public SqliteInMemoryDatabase(ISqliteConfig config) : base(config)
+        public SqliteInMemoryDatabase(ISqliteConfig config) : base(config, ":memory:")
         {
-            ConnectionString = ":memory:";
         }
          
     }

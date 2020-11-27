@@ -7,7 +7,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
     public class SqliteDatabaseService : BaseSqliteDatabaseService
     { 
 
-        public SqliteDatabaseService(ISqliteConfig config) : base(config)
+        public SqliteDatabaseService(ISqliteConfig config) : base(config, config.DatabasePath)
         { 
         }
          
