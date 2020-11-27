@@ -16,7 +16,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
         {
             _tableTypes = config.TableTypes.ToArray();
 
-             var connection = new SQLiteAsyncConnection(config.DatabasePath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
+             var connection = new SQLiteAsyncConnection(connectionString, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
 
             connection.EnableWriteAheadLoggingAsync().ConfigureAwait(false).GetAwaiter().GetResult();
             connection.CreateTablesAsync(CreateFlags.None, _tableTypes).GetAwaiter().GetResult();
