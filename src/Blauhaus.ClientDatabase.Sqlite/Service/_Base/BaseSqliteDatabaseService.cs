@@ -9,7 +9,6 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 {
     public abstract class BaseSqliteDatabaseService : ISqliteDatabaseService
     {
-        private static readonly object Locker = new object();
         private readonly Type[] _tableTypes;
 
         protected BaseSqliteDatabaseService(ISqliteConfig config, string connectionString)
@@ -29,10 +28,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 
         public SQLiteConnectionWithLock GetConnection()
         {
-            lock (Locker)
-            {
-                return AsyncConnection.GetConnection();
-            }
+            return AsyncConnection.GetConnection();
         }
          
 
