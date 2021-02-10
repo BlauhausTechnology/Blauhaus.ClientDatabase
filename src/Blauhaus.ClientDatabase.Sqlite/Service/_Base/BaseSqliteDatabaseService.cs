@@ -26,12 +26,6 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 
         public SQLiteAsyncConnection AsyncConnection { get; }
 
-        public SQLiteConnectionWithLock GetConnection()
-        {
-            return AsyncConnection.GetConnection();
-        }
-         
-
         public Task ExecuteInTransactionAsync(Action<SQLiteConnection> databaseActions)
         {
             return AsyncConnection.RunInTransactionAsync(databaseActions);

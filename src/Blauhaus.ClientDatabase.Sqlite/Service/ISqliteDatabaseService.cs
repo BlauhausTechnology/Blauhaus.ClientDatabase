@@ -9,7 +9,6 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
     public interface ISqliteDatabaseService : IClientDatabaseService
     {
         SQLiteAsyncConnection AsyncConnection { get; }
-        SQLiteConnectionWithLock GetConnection();
 
         Task ExecuteInTransactionAsync(Action<SQLiteConnection> databaseActions);
         Task<T?> ExecuteInTransactionAsync<T>(Func<SQLiteConnection, T> databaseActions) where T : class;
