@@ -5,7 +5,7 @@ using Blauhaus.ClientDatabase.Sqlite.Service;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Blauhaus.ClientDatabase.Sqlite._Ioc
+namespace Blauhaus.ClientDatabase.Sqlite.Ioc
 {
     public static class ServiceCollectionExtensions
     {

@@ -1,9 +1,8 @@
 ﻿using Blauhaus.ClientDatabase.LiteDb.Config;
 using Blauhaus.ClientDatabase.LiteDb.Service;
-using Blauhaus.Ioc.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Blauhaus.ClientDatabase.LiteDb._Ioc
+namespace Blauhaus.ClientDatabase.LiteDb.Ioc
 {
     public static class ServiceCollectionExtensions
     {

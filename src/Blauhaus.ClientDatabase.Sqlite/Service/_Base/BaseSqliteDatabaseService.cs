@@ -17,8 +17,8 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 
              var connection = new SQLiteAsyncConnection(connectionString, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
 
-            connection.EnableWriteAheadLoggingAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-            connection.CreateTablesAsync(CreateFlags.None, _tableTypes).GetAwaiter().GetResult();
+             connection.EnableWriteAheadLoggingAsync();
+             connection.CreateTablesAsync(CreateFlags.None, _tableTypes);
 
             AsyncConnection = connection;
         }

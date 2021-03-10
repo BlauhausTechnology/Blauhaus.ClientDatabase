@@ -2,7 +2,7 @@
 using Blauhaus.ClientDatabase.LiteDb.Service;
 using Blauhaus.Ioc.Abstractions;
 
-namespace Blauhaus.ClientDatabase.LiteDb._Ioc
+namespace Blauhaus.ClientDatabase.LiteDb.Ioc
 {
     public static class IocServiceExtensions
     {

@@ -2,7 +2,7 @@
 using Blauhaus.ClientDatabase.Sqlite.Service;
 using Blauhaus.Ioc.Abstractions;
 
-namespace Blauhaus.ClientDatabase.Sqlite._Ioc
+namespace Blauhaus.ClientDatabase.Sqlite.Ioc
 {
     public static class IocRegistration
     {
