@@ -26,8 +26,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
                  _initializationTask.SetResult(true);
              });
 
-
-            AsyncConnection = connection;
+             AsyncConnection = connection;
         }
 
 
