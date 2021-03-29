@@ -10,6 +10,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
     public abstract class BaseSqliteDatabaseService : ISqliteDatabaseService
     {
         private readonly Type[] _tableTypes;
+        private readonly TaskCompletionSource<bool> _initializationTask;
 
         protected BaseSqliteDatabaseService(ISqliteConfig config, string connectionString)
         {
@@ -17,8 +18,14 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 
              var connection = new SQLiteAsyncConnection(connectionString, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
 
-             connection.EnableWriteAheadLoggingAsync();
-             connection.CreateTablesAsync(CreateFlags.None, _tableTypes);
+             _initializationTask = new TaskCompletionSource<bool>();
+             Task.Run(async () =>
+             {
+                 await connection.EnableWriteAheadLoggingAsync();
+                 await connection.CreateTablesAsync(CreateFlags.None, _tableTypes);
+                 _initializationTask.SetResult(true);
+             });
+
 
             AsyncConnection = connection;
         }
@@ -55,6 +62,9 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
         
         public async Task DeleteDataAsync()
         {
+            //ensure initialization is complete
+            await _initializationTask.Task;
+            
             foreach (var tableType in _tableTypes)
             {
                 var tableMap = AsyncConnection.TableMappings.FirstOrDefault(x => x.TableName == tableType.Name);
