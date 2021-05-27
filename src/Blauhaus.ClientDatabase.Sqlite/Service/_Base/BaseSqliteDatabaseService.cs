@@ -21,9 +21,16 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
              _initializationTask = new TaskCompletionSource<bool>();
              Task.Run(async () =>
              {
-                 await connection.EnableWriteAheadLoggingAsync();
-                 await connection.CreateTablesAsync(CreateFlags.None, _tableTypes);
-                 _initializationTask.SetResult(true);
+                 try
+                 {
+                     await connection.EnableWriteAheadLoggingAsync();
+                     await connection.CreateTablesAsync(CreateFlags.None, _tableTypes);
+                     _initializationTask.SetResult(true);
+                 }
+                 catch (Exception e)
+                 {
+                     _initializationTask.SetException(e);
+                 }
              });
 
              AsyncConnection = connection;
