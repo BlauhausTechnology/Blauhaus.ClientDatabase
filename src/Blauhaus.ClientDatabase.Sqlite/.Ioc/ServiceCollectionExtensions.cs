@@ -8,24 +8,17 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Blauhaus.ClientDatabase.Sqlite.Ioc
 {
     public static class ServiceCollectionExtensions
-    {
-        [Obsolete("User AddSqlite")]
-        public static IServiceCollection RegisterSqlite<TConfig>(this IServiceCollection services) where TConfig : class, ISqliteConfig
-        {
-            services.AddScoped<ISqliteConfig, TConfig>();
-            return Register(services);
-        }
-
+    { 
         public static IServiceCollection AddSqlite<TConfig>(this IServiceCollection services) where TConfig : class, ISqliteConfig
         {
-            services.AddScoped<ISqliteConfig, TConfig>();
+            services.AddSingleton<ISqliteConfig, TConfig>();
             return Register(services);
         }
 
         private static IServiceCollection Register(IServiceCollection services)
         {
-            services.TryAddScoped<ISqliteDatabaseService, SqliteDatabaseService>();
-            services.TryAddScoped<IClientDatabaseService>(x => x.GetService<ISqliteDatabaseService>());
+            services.AddSingleton<ISqliteDatabaseService, SqliteDatabaseService>();
+            services.AddSingleton<IClientDatabaseService>(x => x.GetRequiredService<ISqliteDatabaseService>());
             return services;
         }
     }
