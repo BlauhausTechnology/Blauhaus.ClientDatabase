@@ -8,6 +8,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
 {
     public interface ISqliteDatabaseService : IClientDatabaseService
     {
+        Task EnsureCreatedAsync();
         SQLiteAsyncConnection AsyncConnection { get; }
 
         Task ExecuteInTransactionAsync(Action<SQLiteConnection> databaseActions);

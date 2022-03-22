@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Blauhaus.ClientDatabase.Sqlite.Config;
+using Blauhaus.Errors;
 using Blauhaus.Responses;
 using SQLite;
 
@@ -10,7 +11,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
     public abstract class BaseSqliteDatabaseService : ISqliteDatabaseService
     {
         private readonly Type[] _tableTypes;
-        private readonly TaskCompletionSource<bool> _initializationTask;
+        private readonly Task _initializationTask;
 
         protected BaseSqliteDatabaseService(ISqliteConfig config, string connectionString)
         {
@@ -18,24 +19,27 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 
              var connection = new SQLiteAsyncConnection(connectionString, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
 
-             _initializationTask = new TaskCompletionSource<bool>();
-             Task.Run(async () =>
+             _initializationTask = Task.Run(async () =>
              {
                  try
                  {
                      await connection.EnableWriteAheadLoggingAsync();
                      await connection.CreateTablesAsync(CreateFlags.None, _tableTypes);
-                     _initializationTask.SetResult(true);
                  }
                  catch (Exception e)
                  {
-                     _initializationTask.SetException(e);
+                     Console.Out.WriteLine("Db failed to start " + e.Message);
                  }
              });
 
              AsyncConnection = connection;
         }
 
+
+        public async Task EnsureCreatedAsync()
+        {
+            await _initializationTask;
+        }
 
         public SQLiteAsyncConnection AsyncConnection { get; }
 
@@ -57,7 +61,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 
         public async Task<Response<T>> ExecuteInTransactionAsync<T>(Func<SQLiteConnection, Response<T>> databaseActions) where T : class
         {
-            var result = Response.Failure<T>(Errors.Errors.Undefined);
+            var result = Response.Failure<T>(Error.Undefined);
             await AsyncConnection.RunInTransactionAsync(conn =>
             {
                 result = databaseActions.Invoke(conn);
@@ -69,7 +73,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
         public async Task DeleteDataAsync()
         {
             //ensure initialization is complete
-            await _initializationTask.Task;
+            await _initializationTask;
             
             foreach (var tableType in _tableTypes)
             {
