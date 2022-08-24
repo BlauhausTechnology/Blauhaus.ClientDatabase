@@ -43,13 +43,16 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 
         public SQLiteAsyncConnection AsyncConnection { get; }
 
-        public Task ExecuteInTransactionAsync(Action<SQLiteConnection> databaseActions)
+        public async Task ExecuteInTransactionAsync(Action<SQLiteConnection> databaseActions)
         {
-            return AsyncConnection.RunInTransactionAsync(databaseActions);
+            await _initializationTask;
+            await AsyncConnection.RunInTransactionAsync(databaseActions);
         }
 
         public async Task<T?> ExecuteInTransactionAsync<T>(Func<SQLiteConnection, T> databaseActions) where T : class
         {
+            await _initializationTask;
+            
             T? value = default;
             await AsyncConnection.RunInTransactionAsync(conn =>
             {
@@ -61,6 +64,8 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
 
         public async Task<Response<T>> ExecuteInTransactionAsync<T>(Func<SQLiteConnection, Response<T>> databaseActions) where T : class
         {
+            await _initializationTask;
+            
             var result = Response.Failure<T>(Error.Undefined);
             await AsyncConnection.RunInTransactionAsync(conn =>
             {
@@ -72,7 +77,6 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
         
         public async Task DeleteDataAsync()
         {
-            //ensure initialization is complete
             await _initializationTask;
             
             foreach (var tableType in _tableTypes)

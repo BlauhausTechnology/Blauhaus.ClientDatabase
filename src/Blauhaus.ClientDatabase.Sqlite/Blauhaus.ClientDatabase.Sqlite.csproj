@@ -11,7 +11,7 @@
 	<ItemGroup>
 		<PackageReference Include="Blauhaus.DeviceServices.Abstractions" Version="1.1.12" />
 		<PackageReference Include="Blauhaus.Ioc.Abstractions" Version="1.5.1" />
-		<PackageReference Include="Blauhaus.Responses" Version="0.4.8" />
+		<PackageReference Include="Blauhaus.Responses" Version="0.4.11" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
 		<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
 	</ItemGroup>
