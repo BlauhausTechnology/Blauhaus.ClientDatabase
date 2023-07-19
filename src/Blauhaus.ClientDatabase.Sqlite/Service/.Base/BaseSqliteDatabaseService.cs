@@ -34,6 +34,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service.Base
 
                      await connection.EnableWriteAheadLoggingAsync();
                      await connection.CreateTablesAsync(CreateFlags.None, _tableTypes);
+
                      string currentSchemaVersionString = await keyValueStore.GetAsync(SchemaVersionKey);
                      if (!string.IsNullOrEmpty(currentSchemaVersionString) && int.TryParse(currentSchemaVersionString, out int currentSchemaVersion))
                      {
@@ -46,9 +47,14 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service.Base
                                  await connection.DeleteAllAsync(new TableMapping(tableType));
                              }
 
-                             logger.LogInformation("Savinf new schema version {NewSchemaVersion}", config.SchemaVersion);
+                             logger.LogInformation("Saving updated schema version {NewSchemaVersion}", config.SchemaVersion);
                              await keyValueStore.SetAsync(SchemaVersionKey, config.SchemaVersion.ToString());
                          }
+                     }
+                     else
+                     {
+                         logger.LogInformation("No schema version found, initializing as {NewSchemaVersion}", config.SchemaVersion);
+                         await keyValueStore.SetAsync(SchemaVersionKey, config.SchemaVersion.ToString());
                      }
                  }
                  catch (Exception e)
