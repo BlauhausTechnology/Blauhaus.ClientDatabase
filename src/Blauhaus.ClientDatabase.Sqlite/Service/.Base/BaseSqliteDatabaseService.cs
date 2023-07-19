@@ -35,25 +35,35 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service.Base
                      await connection.EnableWriteAheadLoggingAsync();
                      await connection.CreateTablesAsync(CreateFlags.None, _tableTypes);
 
+                     var resetDatabase = false;
                      string currentSchemaVersionString = await keyValueStore.GetAsync(SchemaVersionKey);
                      if (!string.IsNullOrEmpty(currentSchemaVersionString) && int.TryParse(currentSchemaVersionString, out int currentSchemaVersion))
                      {
                          if (config.SchemaVersion > currentSchemaVersion)
                          {
                              logger.LogInformation("Schema version changed from {OldSchemaVersion} to {NewSchemaVersion}", currentSchemaVersion, config.SchemaVersion);
-                             foreach (var tableType in _tableTypes)
-                             {
-                                 logger.LogInformation("Deleting table {TableName}", tableType.Name);
-                                 await connection.DeleteAllAsync(new TableMapping(tableType));
-                             }
-
-                             logger.LogInformation("Saving updated schema version {NewSchemaVersion}", config.SchemaVersion);
-                             await keyValueStore.SetAsync(SchemaVersionKey, config.SchemaVersion.ToString());
+                             resetDatabase = true;
+                         }
+                         else
+                         {
+                             logger.LogDebug("Schema version has not changed from {OldSchemaVersion}", currentSchemaVersion);
                          }
                      }
                      else
                      {
                          logger.LogInformation("No schema version found, initializing as {NewSchemaVersion}", config.SchemaVersion);
+                         resetDatabase = true;
+                     }
+
+                     if (resetDatabase)
+                     {
+                         foreach (var tableType in _tableTypes)
+                         {
+                             logger.LogInformation("Deleting table {TableName}", tableType.Name);
+                             await connection.DeleteAllAsync(new TableMapping(tableType));
+                         }
+
+                         logger.LogInformation("Saving updated schema version {NewSchemaVersion}", config.SchemaVersion);
                          await keyValueStore.SetAsync(SchemaVersionKey, config.SchemaVersion.ToString());
                      }
                  }
