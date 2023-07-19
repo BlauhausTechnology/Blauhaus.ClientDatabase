@@ -45,6 +45,9 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service.Base
                                  logger.LogInformation("Deleting table {TableName}", tableType.Name);
                                  await connection.DeleteAllAsync(new TableMapping(tableType));
                              }
+
+                             logger.LogInformation("Savinf new schema version {NewSchemaVersion}", config.SchemaVersion);
+                             await keyValueStore.SetAsync(SchemaVersionKey, config.SchemaVersion.ToString());
                          }
                      }
                  }
