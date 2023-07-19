@@ -7,8 +7,9 @@ namespace Blauhaus.ClientDatabase.Sqlite.Config
 {
     public abstract class BaseSqliteConfig : ISqliteConfig
     {
-        protected BaseSqliteConfig(IDeviceInfoService deviceInfoService, string databaseName)
+        protected BaseSqliteConfig(IDeviceInfoService deviceInfoService, int schemaVersion, string databaseName)
         {
+            SchemaVersion = schemaVersion;
 
             if (!databaseName.EndsWith(".sqlite"))
             {
@@ -19,16 +20,12 @@ namespace Blauhaus.ClientDatabase.Sqlite.Config
             
             TableTypes = new List<Type>
             { 
-
-                //Vessels
-
             };
         }
          
 
         public string DatabasePath { get; protected set; }
         public IList<Type> TableTypes { get; protected set; }
-
-
+        public int SchemaVersion { get; }
     }
 }

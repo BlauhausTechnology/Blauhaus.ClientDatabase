@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Blauhaus.Analytics.Abstractions;
 using Blauhaus.ClientDatabase.Sqlite.Config;
+using Blauhaus.Common.Abstractions;
 using Blauhaus.Errors;
 using Blauhaus.Responses;
+using Microsoft.Extensions.Logging;
 using SQLite;
 
-namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
+namespace Blauhaus.ClientDatabase.Sqlite.Service.Base
 {
     public abstract class BaseSqliteDatabaseService : ISqliteDatabaseService
     {
         private readonly Type[] _tableTypes;
         private readonly Task _initializationTask;
+        private const string SchemaVersionKey = "SchemaVersion";
 
-        protected BaseSqliteDatabaseService(ISqliteConfig config, string connectionString)
+        protected BaseSqliteDatabaseService(
+            IAnalyticsLogger logger,
+            IKeyValueStore keyValueStore,
+            ISqliteConfig config, string connectionString)
         {
             _tableTypes = config.TableTypes.ToArray();
 
@@ -23,12 +30,28 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
              {
                  try
                  {
+                     logger.LogInformation("Initializing sqlite database for connection {SqliteConnectionString}", connectionString);
+
                      await connection.EnableWriteAheadLoggingAsync();
                      await connection.CreateTablesAsync(CreateFlags.None, _tableTypes);
+                     string currentSchemaVersionString = await keyValueStore.GetAsync(SchemaVersionKey);
+                     if (!string.IsNullOrEmpty(currentSchemaVersionString) && int.TryParse(currentSchemaVersionString, out int currentSchemaVersion))
+                     {
+                         if (config.SchemaVersion > currentSchemaVersion)
+                         {
+                             logger.LogInformation("Schema version changed from {OldSchemaVersion} to {NewSchemaVersion}", currentSchemaVersion, config.SchemaVersion);
+                             foreach (var tableType in _tableTypes)
+                             {
+                                 logger.LogInformation("Deleting table {TableName}", tableType.Name);
+                                 await connection.DeleteAllAsync(new TableMapping(tableType));
+                             }
+                         }
+                     }
                  }
                  catch (Exception e)
                  {
-                     Console.Out.WriteLine("Db failed to start " + e.Message);
+                     logger.LogError(e, "Failed to start Sqlite database for connection {SqliteConnectionString}", connectionString);
+                     throw;
                  }
              });
 
@@ -42,6 +65,12 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service._Base
         }
 
         public SQLiteAsyncConnection AsyncConnection { get; }
+
+        public async ValueTask<SQLiteAsyncConnection> GetConnectionAsync()
+        {
+            await _initializationTask;
+            return AsyncConnection;
+        }
 
         public async Task ExecuteInTransactionAsync(Action<SQLiteConnection> databaseActions)
         {

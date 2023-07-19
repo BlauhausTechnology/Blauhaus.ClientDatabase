@@ -7,10 +7,11 @@
 	<ItemGroup>
 		<Compile Include=".Ioc\IocServiceExtensions.cs" />
 		<Compile Include=".Ioc\ServiceCollectionExtensions.cs" />
+		<Compile Include="Service\.Base\BaseSqliteDatabaseService.cs" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Blauhaus.DeviceServices.Abstractions" Version="1.1.12" />
-		<PackageReference Include="Blauhaus.Ioc.Abstractions" Version="1.5.1" />
+		<PackageReference Include="Blauhaus.DeviceServices.Abstractions" Version="1.2.18" />
+		<PackageReference Include="Blauhaus.Ioc.Abstractions" Version="1.5.3" />
 		<PackageReference Include="Blauhaus.Responses" Version="0.4.11" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
 		<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />

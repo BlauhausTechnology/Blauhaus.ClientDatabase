@@ -10,6 +10,7 @@ namespace Blauhaus.ClientDatabase.Sqlite.Service
     {
         Task EnsureCreatedAsync();
         SQLiteAsyncConnection AsyncConnection { get; }
+        ValueTask<SQLiteAsyncConnection> GetConnectionAsync();
 
         Task ExecuteInTransactionAsync(Action<SQLiteConnection> databaseActions);
         Task<T?> ExecuteInTransactionAsync<T>(Func<SQLiteConnection, T> databaseActions) where T : class;
